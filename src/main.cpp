@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include "iostream"
 
+#include "Renderer/ShaderProgram.h"
+
 int g_windowSizeX = 1024;
 int g_windowSizeY = 720;
 
@@ -87,26 +89,19 @@ int main(void) {
         return -1;
     }
 
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "RenderEngine: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
     glClearColor(1, 1, 0, 1);
 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vertex_shader, nullptr);
-    glCompileShader(vs);
+    std::string vertexShader(vertex_shader);
+    std::string fragmentShader(fragment_shader);
 
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
-
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vs);
-    glAttachShader(shader_program, fs);
-    glLinkProgram(shader_program);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    RenderEngine::ShaderProgram shaderProgram(vertexShader, fragmentShader);
+    if (!shaderProgram.isCompiled()) {
+        std::cerr << "Can't create shader program!" << std::endl;
+        return -1;
+    }
 
     GLuint points_vbo = 0;
     glGenBuffers(1, &points_vbo);
@@ -133,7 +128,8 @@ int main(void) {
     while (!glfwWindowShouldClose(pWindow)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader_program);
+        shaderProgram.use();
+        
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
