@@ -28,7 +28,7 @@ ResourceManager::loadShaders(
         return nullptr;
     }
 
-    std::string fragmentString = getFileStringByRelativePath(vertexPath);
+    std::string fragmentString = getFileStringByRelativePath(fragmentPath);
     if (fragmentString.empty()) {
         std::cerr << "ResourceManager::loadShaders [fragmentString]: No vertex shader " << std::endl;
         return nullptr;
