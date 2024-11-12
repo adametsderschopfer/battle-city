@@ -103,15 +103,15 @@ struct {
 // they are so simple)
 //========================================================================
 
-#define P_TEX_WIDTH  8    // Particle texture dimensions
+#define P_TEX_WIDTH  8    // Particle textures dimensions
 #define P_TEX_HEIGHT 8
-#define F_TEX_WIDTH  16   // Floor texture dimensions
+#define F_TEX_WIDTH  16   // Floor textures dimensions
 #define F_TEX_HEIGHT 16
 
 // Texture object IDs
 GLuint particle_tex_id, floor_tex_id;
 
-// Particle texture (a simple spot)
+// Particle textures (a simple spot)
 const unsigned char particle_texture[ P_TEX_WIDTH * P_TEX_HEIGHT ] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x11, 0x22, 0x22, 0x11, 0x00, 0x00,
@@ -123,7 +123,7 @@ const unsigned char particle_texture[ P_TEX_WIDTH * P_TEX_HEIGHT ] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-// Floor texture (your basic checkered floor)
+// Floor textures (your basic checkered floor)
 const unsigned char floor_texture[ F_TEX_WIDTH * F_TEX_HEIGHT ] = {
     0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
     0xff, 0xf0, 0xcc, 0xf0, 0xf0, 0xf0, 0xff, 0xf0, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
@@ -437,7 +437,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    // Select particle texture
+    // Select particle textures
     if (!wireframe)
     {
         glEnable(GL_TEXTURE_2D);
@@ -447,7 +447,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
     // Set up vertex arrays. We use interleaved arrays, which is easier to
     // handle (in most situations) and it gives a linear memory access
     // access pattern (which may give better performance in some
-    // situations). GL_T2F_C4UB_V3F means: 2 floats for texture coords,
+    // situations). GL_T2F_C4UB_V3F means: 2 floats for textures coords,
     // 4 ubytes for color and 3 floats for vertex coord (in that order).
     // Most OpenGL cards / drivers are optimized for this format.
     glInterleavedArrays(GL_T2F_C4UB_V3F, 0, vertex_array);
@@ -496,7 +496,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
 
             // 3) Translate the quad to the correct position in modelview
             // space and store its parameters in vertex arrays (we also
-            // store texture coord and color information for each vertex).
+            // store textures coord and color information for each vertex).
 
             // Lower left corner
             vptr->s    = 0.f;
@@ -562,7 +562,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
     glDrawArrays(GL_QUADS, 0, PARTICLE_VERTS * particle_count);
 
     // Disable vertex arrays (Note: glInterleavedArrays implicitly called
-    // glEnableClientState for vertex, texture coord and color arrays)
+    // glEnableClientState for vertex, textures coord and color arrays)
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -1006,7 +1006,7 @@ int main(int argc, char** argv)
     glfwGetFramebufferSize(window, &width, &height);
     resize_callback(window, width, height);
 
-    // Upload particle texture
+    // Upload particle textures
     glGenTextures(1, &particle_tex_id);
     glBindTexture(GL_TEXTURE_2D, particle_tex_id);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -1017,7 +1017,7 @@ int main(int argc, char** argv)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, P_TEX_WIDTH, P_TEX_HEIGHT,
                  0, GL_LUMINANCE, GL_UNSIGNED_BYTE, particle_texture);
 
-    // Upload floor texture
+    // Upload floor textures
     glGenTextures(1, &floor_tex_id);
     glBindTexture(GL_TEXTURE_2D, floor_tex_id);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

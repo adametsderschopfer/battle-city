@@ -917,7 +917,7 @@ static void demo_prepare_textures(struct demo *demo) {
         if ((props.linearTilingFeatures &
              VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) &&
             !demo->use_staging_buffer) {
-            /* Device can texture using linear textures */
+            /* Device can textures using linear textures */
             demo_prepare_texture_image(
                 demo, tex_colors[i], &demo->textures[i], VK_IMAGE_TILING_LINEAR,
                 VK_IMAGE_USAGE_SAMPLED_BIT,
@@ -925,7 +925,7 @@ static void demo_prepare_textures(struct demo *demo) {
                     VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
         } else if (props.optimalTilingFeatures &
                    VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) {
-            /* Must use staging buffer to copy linear texture to optimized */
+            /* Must use staging buffer to copy linear textures to optimized */
             struct texture_object staging_texture;
 
             memset(&staging_texture, 0, sizeof(staging_texture));
@@ -977,7 +977,7 @@ static void demo_prepare_textures(struct demo *demo) {
             demo_destroy_texture_image(demo, &staging_texture);
         } else {
             /* Can't support VK_FORMAT_B8G8R8A8_UNORM !? */
-            assert(!"No support for B8G8R8A8_UNORM as texture image format");
+            assert(!"No support for B8G8R8A8_UNORM as textures image format");
         }
 
         const VkSamplerCreateInfo sampler = {

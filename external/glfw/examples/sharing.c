@@ -24,8 +24,11 @@
 //========================================================================
 
 #define GLAD_GL_IMPLEMENTATION
+
 #include <glad/gl.h>
+
 #define GLFW_INCLUDE_NONE
+
 #include <GLFW/glfw3.h>
 
 #include <stdio.h>
@@ -33,49 +36,46 @@
 
 #include "linmath.h"
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec2 vPos;\n"
-"varying vec2 texcoord;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    texcoord = vPos;\n"
-"}\n";
+static const char *vertex_shader_text =
+        "#version 110\n"
+        "uniform mat4 MVP;\n"
+        "attribute vec2 vPos;\n"
+        "varying vec2 texcoord;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+        "    texcoord = vPos;\n"
+        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"uniform sampler2D texture;\n"
-"uniform vec3 color;\n"
-"varying vec2 texcoord;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color * texture2D(texture, texcoord).rgb, 1.0);\n"
-"}\n";
+static const char *fragment_shader_text =
+        "#version 110\n"
+        "uniform sampler2D textures;\n"
+        "uniform vec3 color;\n"
+        "varying vec2 texcoord;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(color * texture2D(textures, texcoord).rgb, 1.0);\n"
+        "}\n";
 
 static const vec2 vertices[4] =
-{
-    { 0.f, 0.f },
-    { 1.f, 0.f },
-    { 1.f, 1.f },
-    { 0.f, 1.f }
-};
+        {
+                {0.f, 0.f},
+                {1.f, 0.f},
+                {1.f, 1.f},
+                {0.f, 1.f}
+        };
 
-static void error_callback(int error, const char* description)
-{
+static void error_callback(int error, const char *description) {
     fprintf(stderr, "Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
+static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-int main(int argc, char** argv)
-{
-    GLFWwindow* windows[2];
+int main(int argc, char **argv) {
+    GLFWwindow *windows[2];
     GLuint texture, program, vertex_buffer;
     GLint mvp_location, vpos_location, color_location, texture_location;
 
@@ -88,8 +88,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     windows[0] = glfwCreateWindow(400, 400, "First", NULL, NULL);
-    if (!windows[0])
-    {
+    if (!windows[0]) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -118,9 +117,8 @@ int main(int argc, char** argv)
 
         srand((unsigned int) glfwGetTimerValue());
 
-        for (y = 0;  y < 16;  y++)
-        {
-            for (x = 0;  x < 16;  x++)
+        for (y = 0; y < 16; y++) {
+            for (x = 0; x < 16; x++)
                 pixels[y * 16 + x] = rand() % 256;
         }
 
@@ -143,7 +141,7 @@ int main(int argc, char** argv)
 
         mvp_location = glGetUniformLocation(program, "MVP");
         color_location = glGetUniformLocation(program, "color");
-        texture_location = glGetUniformLocation(program, "texture");
+        texture_location = glGetUniformLocation(program, "textures");
         vpos_location = glGetAttribLocation(program, "vPos");
 
         glGenBuffers(1, &vertex_buffer);
@@ -160,11 +158,10 @@ int main(int argc, char** argv)
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+                          sizeof(vertices[0]), (void *) 0);
 
     windows[1] = glfwCreateWindow(400, 400, "Second", NULL, windows[0]);
-    if (!windows[1])
-    {
+    if (!windows[1]) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -195,20 +192,18 @@ int main(int argc, char** argv)
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+                          sizeof(vertices[0]), (void *) 0);
 
     while (!glfwWindowShouldClose(windows[0]) &&
-           !glfwWindowShouldClose(windows[1]))
-    {
+           !glfwWindowShouldClose(windows[1])) {
         int i;
         const vec3 colors[2] =
-        {
-            { 0.8f, 0.4f, 1.f },
-            { 0.3f, 0.4f, 1.f }
-        };
+                {
+                        {0.8f, 0.4f, 1.f},
+                        {0.3f, 0.4f, 1.f}
+                };
 
-        for (i = 0;  i < 2;  i++)
-        {
+        for (i = 0; i < 2; i++) {
             int width, height;
             mat4x4 mvp;
 
@@ -218,7 +213,7 @@ int main(int argc, char** argv)
             glViewport(0, 0, width, height);
 
             mat4x4_ortho(mvp, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f);
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat *) mvp);
             glUniform3fv(color_location, 1, colors[i]);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
