@@ -20,10 +20,11 @@ namespace RenderEngine {
 
         ShaderProgram(ShaderProgram &&shaderProgram) noexcept;
 
-
-        bool isCompiled() const {
+        [[nodiscard]] bool isCompiled() const {
             return m_isCompiled;
         };
+
+        void setUniformInt(const std::string &name, GLint value);
 
         void use() const;
 

@@ -85,3 +85,7 @@ bool RenderEngine::ShaderProgram::createShader(const std::string &source, const 
 
     return true;
 }
+
+void RenderEngine::ShaderProgram::setUniformInt(const std::string &name, const GLint value) {
+    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+}

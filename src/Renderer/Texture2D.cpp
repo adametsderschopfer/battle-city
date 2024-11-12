@@ -1,12 +1,12 @@
 #include "Texture2D.h"
 
 RenderEngine::Texture2D::Texture2D(
-        const int width,
-        const int height,
+        GLsizei width,
+        GLsizei height,
         const unsigned char *data,
-        const unsigned int channels,
-        const GLenum filter,
-        const GLenum wrapMode
+        unsigned int channels,
+        GLint filter,
+        GLint wrapMode
 ) : m_width(width), m_height(height) {
     switch (channels) {
         case 4:
@@ -20,6 +20,7 @@ RenderEngine::Texture2D::Texture2D(
     }
 
     glGenTextures(1, &m_ID);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_ID);
     glTexImage2D(GL_TEXTURE_2D, 0, m_mode, m_width, m_height, 0, m_mode, GL_UNSIGNED_BYTE, data);
 
@@ -48,7 +49,7 @@ RenderEngine::Texture2D &RenderEngine::Texture2D::operator=(RenderEngine::Textur
     return *this;
 }
 
-RenderEngine::Texture2D::Texture2D(RenderEngine::Texture2D &&texture2d) {
+RenderEngine::Texture2D::Texture2D(RenderEngine::Texture2D &&texture2d) noexcept {
     m_ID = texture2d.m_ID;
     texture2d.m_ID = 0;
     m_mode = texture2d.m_mode;
@@ -56,8 +57,10 @@ RenderEngine::Texture2D::Texture2D(RenderEngine::Texture2D &&texture2d) {
     m_height = texture2d.m_height;
 }
 
-// todo: create unbind method
-
 void RenderEngine::Texture2D::bind() const {
+    glBindTexture(GL_TEXTURE_2D, m_ID);
+}
+
+void RenderEngine::Texture2D::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }

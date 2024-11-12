@@ -7,12 +7,12 @@ namespace RenderEngine {
     class Texture2D {
     public:
         Texture2D(
-                GLint width,
-                GLint height,
+                GLsizei width,
+                GLsizei height,
                 const unsigned char *data,
-                unsigned int channels = 4,
-                const GLenum filter = GL_LINEAR,
-                const GLenum wrapMode = GL_CLAMP_TO_EDGE
+                unsigned int channels,
+                GLint filter,
+                GLint wrapMode
         );
 
         ~Texture2D();
@@ -27,13 +27,15 @@ namespace RenderEngine {
 
         Texture2D(Texture2D &&texture2d) noexcept;
 
+        static void unbind();
+
         void bind() const;
 
     private:
-        GLuint m_ID;
-        GLenum m_mode;
-        unsigned int m_width;
-        unsigned int m_height;
+        GLuint m_ID{};
+        GLint m_mode;
+        GLsizei m_width;
+        GLsizei m_height;
     };
 }
 

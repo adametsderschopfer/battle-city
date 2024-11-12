@@ -3,6 +3,7 @@
 #include "iostream"
 
 #include "Renderer/ShaderProgram.h"
+#include "Renderer/Texture2D.h"
 #include "Resources/ResourceManager.h"
 
 int g_windowSizeX = 1024;
@@ -18,6 +19,12 @@ GLfloat colors[] = {
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 1.0f,
+};
+
+GLfloat textureCoords[] = {
+        0.5f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
 };
 
 void glfwWindowSizeCallback(GLFWwindow *pWindow, int width, int height) {
@@ -79,17 +86,17 @@ int main(int argc, char **argv) {
 
     {
         ResourceManager resourceManager(argv[0]);
-        auto pTriangleShaderProgram = resourceManager.loadShaders(
+        auto pDefaultShaderProgram = resourceManager.loadShaders(
                 "TriangleShader",
-                "res/shaders/example/triangle.vert",
-                "res/shaders/example/triangle.frag"
+                "res/shaders/texture/texture.vert",
+                "res/shaders/texture/texture.frag"
         );
-        if (!pTriangleShaderProgram) {
+        if (!pDefaultShaderProgram) {
             std::cerr << "Can't create shader program: " << "TriangleShader" << std::endl;
             return -1;
         }
 
-        resourceManager.loadTexture("test", "res/textures/example/tanks.png");
+        auto tex = resourceManager.loadTexture("test", "res/textures/example/map_16x16.png");
 
         GLuint points_vbo = 0;
         glGenBuffers(1, &points_vbo);
@@ -100,6 +107,11 @@ int main(int argc, char **argv) {
         glGenBuffers(1, &colors_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+
+        GLuint texCoord_vbo = 0;
+        glGenBuffers(1, &texCoord_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, texCoord_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
 
         GLuint vao = 0;
         glGenVertexArrays(1, &vao);
@@ -113,12 +125,20 @@ int main(int argc, char **argv) {
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, texCoord_vbo);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+        pDefaultShaderProgram->use();
+        pDefaultShaderProgram->setUniformInt("tex", 0);
+
         while (!glfwWindowShouldClose(pWindow)) {
             glClear(GL_COLOR_BUFFER_BIT);
 
-            pTriangleShaderProgram->use();
-
+            pDefaultShaderProgram->use();
             glBindVertexArray(vao);
+
+            tex->bind();
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             glfwSwapBuffers(pWindow);

@@ -124,7 +124,7 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::getTexture(const std::
         return it->second;
     }
 
-    std::cerr << "ResourceManager::getTexture: Can't find texture by " << textureName << std::endl;
+    std::cerr << "ResourceManager::getTexture: Can't find textureCoord by " << textureName << std::endl;
 
     return nullptr;
 }
