@@ -1,4 +1,5 @@
 #include "ShaderProgram.h"
+#include "glm/gtc/type_ptr.hpp"
 
 RenderEngine::ShaderProgram::ShaderProgram(const std::string &vertexShader, const std::string &fragmentShader) {
     GLuint vertexShaderID;
@@ -88,4 +89,8 @@ bool RenderEngine::ShaderProgram::createShader(const std::string &source, const 
 
 void RenderEngine::ShaderProgram::setUniformInt(const std::string &name, const GLint value) {
     glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+}
+
+void RenderEngine::ShaderProgram::setMatrix4(const std::string &name, const glm::mat4 &value) {
+    glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

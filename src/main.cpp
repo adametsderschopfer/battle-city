@@ -1,18 +1,19 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include "iostream"
+#include "glm/vec2.hpp"
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include "Renderer/ShaderProgram.h"
 #include "Renderer/Texture2D.h"
 #include "Resources/ResourceManager.h"
 
-int g_windowSizeX = 1024;
-int g_windowSizeY = 720;
 
 GLfloat point[] = {
-        0.0f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
+        0.0f, 50.f, 0.0f,
+        50.f, -50.f, 0.0f,
+        -50.f, -50.f, 0.0f,
 };
 
 GLfloat colors[] = {
@@ -27,11 +28,13 @@ GLfloat textureCoords[] = {
         0.0f, 0.0f,
 };
 
-void glfwWindowSizeCallback(GLFWwindow *pWindow, int width, int height) {
-    g_windowSizeX = width;
-    g_windowSizeY = height;
+glm::ivec2 g_windowSize(1024, 720);
 
-    glViewport(0, 0, g_windowSizeX, g_windowSizeY);
+void glfwWindowSizeCallback(GLFWwindow *pWindow, int width, int height) {
+    g_windowSize.x = width;
+    g_windowSize.y = height;
+
+    glViewport(0, 0, g_windowSize.x, g_windowSize.y);
 };
 
 void glfwKeyCallback(GLFWwindow *pWindow, int key, int scancode, int action, int mode) {
@@ -56,10 +59,9 @@ int main(int argc, char **argv) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
     GLFWwindow *pWindow = glfwCreateWindow(
-            g_windowSizeX,
-            g_windowSizeY,
+            g_windowSize.x,
+            g_windowSize.y,
             "Example window",
             nullptr,
             nullptr
@@ -132,13 +134,34 @@ int main(int argc, char **argv) {
         pDefaultShaderProgram->use();
         pDefaultShaderProgram->setUniformInt("tex", 0);
 
+        auto modelMatrix_1 = glm::mat4(1.f);
+        modelMatrix_1 = glm::translate(modelMatrix_1, glm::vec3(100.f, 50.f, 0.f));
+
+        auto modelMatrix_2 = glm::mat4(1.f);
+        modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
+
+        glm::mat4 projectionMatrix = glm::ortho(
+                0.f,
+                static_cast<float>(g_windowSize.x),
+                0.f,
+                static_cast<float>(g_windowSize.y),
+                -100.f,
+                100.f
+        );
+
+        pDefaultShaderProgram->setMatrix4("projectionMat", projectionMatrix);
+
         while (!glfwWindowShouldClose(pWindow)) {
             glClear(GL_COLOR_BUFFER_BIT);
 
             pDefaultShaderProgram->use();
             glBindVertexArray(vao);
-
             tex->bind();
+
+            pDefaultShaderProgram->setMatrix4("modelMat", modelMatrix_1);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            pDefaultShaderProgram->setMatrix4("modelMat", modelMatrix_2);
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             glfwSwapBuffers(pWindow);

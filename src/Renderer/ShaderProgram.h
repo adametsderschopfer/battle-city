@@ -2,6 +2,7 @@
 
 #include "iostream"
 #include "glad/glad.h"
+#include "glm/mat4x4.hpp"
 
 namespace RenderEngine {
     class ShaderProgram {
@@ -25,6 +26,8 @@ namespace RenderEngine {
         };
 
         void setUniformInt(const std::string &name, GLint value);
+
+        void setMatrix4(const std::string &name, const glm::mat4 &value);
 
         void use() const;
 
