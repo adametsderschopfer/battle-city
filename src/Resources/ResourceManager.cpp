@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
+#include "../Renderer/Sprite.h"
 
 #include <fstream>
 #include <memory>
@@ -23,19 +24,19 @@ ResourceManager::loadShaders(
         const std::string &fragmentPath
 ) {
     if (m_shaderPrograms.contains(shaderName)) {
-        std::cerr << "ResourceManager::loadShaders: Shader name \'" + shaderName + "\' already exists" << std::endl;
+        std::cerr << "ResourceManager->loadShaders: Shader name \'" + shaderName + "\' already exists" << std::endl;
         return nullptr;
     }
 
     std::string vertexString = getFileStringByRelativePath(vertexPath);
     if (vertexString.empty()) {
-        std::cerr << "ResourceManager::loadShaders [vertexString]: No vertex shader " << std::endl;
+        std::cerr << "ResourceManager->loadShaders [vertexString]: No vertex shader " << std::endl;
         return nullptr;
     }
 
     std::string fragmentString = getFileStringByRelativePath(fragmentPath);
     if (fragmentString.empty()) {
-        std::cerr << "ResourceManager::loadShaders [fragmentString]: No vertex shader " << std::endl;
+        std::cerr << "ResourceManager->loadShaders [fragmentString]: No vertex shader " << std::endl;
         return nullptr;
     }
 
@@ -48,7 +49,7 @@ ResourceManager::loadShaders(
     ).first->second;
 
     if (!newShader->isCompiled()) {
-        std::cerr << "ResourceManager::loadShaders: Can't load shader program: \n"
+        std::cerr << "ResourceManager->loadShaders: Can't load shader program: \n"
                   << "\tVertex: " << vertexPath << "\n"
                   << "\tFragment: " << fragmentPath << "\n"
                   << std::endl;
@@ -59,7 +60,8 @@ ResourceManager::loadShaders(
     return newShader;
 }
 
-std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::getShaderProgram(
+std::shared_ptr<RenderEngine::ShaderProgram>
+ResourceManager::getShaderProgram(
         const std::string &shaderName
 ) {
     auto it = m_shaderPrograms.find(shaderName);
@@ -67,16 +69,17 @@ std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::getShaderProgram(
         return it->second;
     }
 
-    std::cerr << "ResourceManager::getShaderProgram: Can't find shader program by " << shaderName << std::endl;
+    std::cerr << "ResourceManager->getShaderProgram: Can't find shader program by " << shaderName << std::endl;
 
     return nullptr;
 }
 
-std::string ResourceManager::getFileStringByRelativePath(const std::string &relativeFilePath) const {
+std::string
+ResourceManager::getFileStringByRelativePath(const std::string &relativeFilePath) const {
     std::ifstream f;
     f.open(m_path + "/" + relativeFilePath, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
-        std::cerr << "ResourceManager::getFileStringByRelativePath: Failed to open file: "
+        std::cerr << "ResourceManager->getFileStringByRelativePath: Failed to open file: "
                   << relativeFilePath
                   << std::endl;
         return "";
@@ -89,7 +92,7 @@ std::string ResourceManager::getFileStringByRelativePath(const std::string &rela
 }
 
 std::shared_ptr<RenderEngine::Texture2D>
-ResourceManager::loadTexture(const std::string textureName, const std::string &texturePath) {
+ResourceManager::loadTexture(const std::string &textureName, const std::string &texturePath) {
     int channels = 0;
     int width = 0;
     int height = 0;
@@ -118,13 +121,60 @@ ResourceManager::loadTexture(const std::string textureName, const std::string &t
     return newTexture;
 }
 
-std::shared_ptr<RenderEngine::Texture2D> ResourceManager::getTexture(const std::string &textureName) {
+std::shared_ptr<RenderEngine::Texture2D>
+ResourceManager::getTexture(const std::string &textureName) {
     auto it = m_textures.find(textureName);
     if (it != m_textures.end()) {
         return it->second;
     }
 
-    std::cerr << "ResourceManager::getTexture: Can't find textureCoord by " << textureName << std::endl;
+    std::cerr << "ResourceManager->getTexture: Can't find texture by " << textureName << std::endl;
+
+    return nullptr;
+}
+
+std::shared_ptr<RenderEngine::Sprite>
+ResourceManager::loadSprite(
+        const std::string &spriteName,
+        const std::string &textureName,
+        const std::string &shaderProgramName,
+        const unsigned int spriteWidth,
+        const unsigned int spriteHeight
+) {
+    auto pTexture = getTexture(textureName);
+    if (!pTexture) {
+        std::cerr << "Can't find the texture by " << textureName << "for the sprite" << std::endl;
+        return nullptr;
+    }
+
+    auto pShaderProgram = getShaderProgram(shaderProgramName);
+    if (!pShaderProgram) {
+        std::cerr << "Can't find the shaderProgram by " << shaderProgramName << "for the sprite" << std::endl;
+        return nullptr;
+    }
+
+    auto newSprite = m_sprites.emplace(
+            spriteName,
+            std::make_shared<RenderEngine::Sprite>(
+                    pTexture,
+                    pShaderProgram,
+                    glm::vec2(.0f, .0f),
+                    glm::vec2(spriteWidth, spriteHeight),
+                    .0f
+            )
+    ).first->second;
+
+    return newSprite;
+}
+
+std::shared_ptr<RenderEngine::Sprite>
+ResourceManager::getSprite(const std::string &spriteName) {
+    auto it = m_sprites.find(spriteName);
+    if (it != m_sprites.end()) {
+        return it->second;
+    }
+
+    std::cerr << "ResourceManager->getSprite: Can't find sprite by " << spriteName << std::endl;
 
     return nullptr;
 }
