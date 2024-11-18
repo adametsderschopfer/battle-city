@@ -3,6 +3,7 @@
 #include "string"
 #include "memory"
 #include "map"
+#include "vector"
 
 namespace RenderEngine {
     class ShaderProgram;
@@ -38,13 +39,22 @@ public:
 
     std::shared_ptr<RenderEngine::Texture2D> getTexture(const std::string &textureName);
 
+    std::shared_ptr<RenderEngine::Texture2D> loadTextureAtlas(
+            const std::string &textureName,
+            const std::string &texturePath,
+            const std::vector<std::string> &subTextures,
+            unsigned int subTextureWidth,
+            unsigned int subTextureHeight
+    );
+
     /* --- Sprite ---  */
     std::shared_ptr<RenderEngine::Sprite> loadSprite(
             const std::string &spriteName,
             const std::string &textureName,
             const std::string &shaderProgramName,
             unsigned int spriteWidth,
-            unsigned int spriteHeight
+            unsigned int spriteHeight,
+            const std::string &subTextureName = "default"
     );
 
     std::shared_ptr<RenderEngine::Sprite> getSprite(const std::string &spriteName);

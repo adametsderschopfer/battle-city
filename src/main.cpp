@@ -86,11 +86,33 @@ int main(int argc, char **argv) {
                 "res/textures/example/map_16x16.png"
         );
 
+        std::vector<std::string> subTextureNames = {
+                "fullBricks",
+                "topBricks",
+                "bottomBricks",
+                "leftBricks",
+                "rightBricks",
+                "topLeftBrick",
+                "topRightBrick",
+                "bottomLeftBrick",
+                "bottomRightBrick",
+                "fullConcrete",
+        };
+
+        auto pTextureAtlas = resourceManager.loadTextureAtlas(
+                "DefaultTextureAtlas",
+                "res/textures/example/map_16x16.png",
+                subTextureNames,
+                16,
+                16
+        );
+
         auto pSprite = resourceManager.loadSprite(
                 "NewSprite",
-                "DefaultTexture",
+                "DefaultTextureAtlas",
                 "SpriteShader",
-                50, 100
+                50, 50,
+                "fullConcrete"
         );
         pSprite->setPosition(glm::vec2(300, 100));
 

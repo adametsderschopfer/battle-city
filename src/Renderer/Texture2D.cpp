@@ -1,4 +1,5 @@
 #include "Texture2D.h"
+#include "glm/vec2.hpp"
 
 RenderEngine::Texture2D::Texture2D(
         GLsizei width,
@@ -22,7 +23,17 @@ RenderEngine::Texture2D::Texture2D(
     glGenTextures(1, &m_ID);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_ID);
-    glTexImage2D(GL_TEXTURE_2D, 0, m_mode, m_width, m_height, 0, m_mode, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            m_mode,
+            static_cast<GLsizei>(m_width),
+            static_cast<GLsizei>(m_height),
+            0,
+            m_mode,
+            GL_UNSIGNED_BYTE,
+            data
+    );
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
@@ -63,4 +74,23 @@ void RenderEngine::Texture2D::bind() const {
 
 void RenderEngine::Texture2D::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void RenderEngine::Texture2D::addSubTexture(
+        std::string name,
+        glm::vec2 leftBottomUV,
+        glm::vec2 rightTopUV
+) {
+    m_subTextures.emplace(name, SubTexture2D(leftBottomUV, rightTopUV));
+}
+
+const RenderEngine::SubTexture2D &
+RenderEngine::Texture2D::getSubTexture(const std::string &name) const {
+    auto it = m_subTextures.find(name);
+    if (it != m_subTextures.end()) {
+        return it->second;
+    }
+
+    const static SubTexture2D defaultSubTexture2D;
+    return defaultSubTexture2D;
 }
