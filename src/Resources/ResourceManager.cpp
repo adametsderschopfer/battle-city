@@ -13,10 +13,12 @@
 
 #include "stb_image.h"
 
-ResourceManager::ResourceManager(const std::string &executablePath) {
-    size_t found = executablePath.find_last_of("/\\");
-    m_path = executablePath.substr(0, found);
-}
+ResourceManager::ShaderProgramMap ResourceManager::m_shaderPrograms;
+ResourceManager::Texture2DMap ResourceManager::m_textures;
+ResourceManager::SpriteMap ResourceManager::m_sprites;
+ResourceManager::AnimatedSpriteMap ResourceManager::m_animatedSprites;
+std::string ResourceManager::m_path;
+
 
 std::shared_ptr<RenderEngine::ShaderProgram>
 ResourceManager::loadShaders(
@@ -76,7 +78,7 @@ ResourceManager::getShaderProgram(
 }
 
 std::string
-ResourceManager::getFileStringByRelativePath(const std::string &relativeFilePath) const {
+ResourceManager::getFileStringByRelativePath(const std::string &relativeFilePath) {
     std::ifstream f;
     f.open(m_path + "/" + relativeFilePath, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
@@ -198,10 +200,10 @@ ResourceManager::loadTextureAtlas(
         for (const auto &currentSubTextureName: subTextures) {
             glm::vec2 leftBottomUV(
                     static_cast<float>(currentTextureOffsetX) / pTexture->width(),
-                    (static_cast<float>(currentTextureOffsetY) - subTextureHeight) / pTexture->height()
+                    (static_cast<float>(currentTextureOffsetY) - (subTextureHeight)) / pTexture->height()
             );
             glm::vec2 rightTopUV(
-                    (static_cast<float>(currentTextureOffsetX) + subTextureWidth) / pTexture->width(),
+                    (static_cast<float>(currentTextureOffsetX) + (subTextureWidth)) / pTexture->width(),
                     static_cast<float>(currentTextureOffsetY) / pTexture->height()
             );
 
@@ -268,4 +270,17 @@ ResourceManager::getAnimatedSprite(const std::string &spriteName) {
     std::cerr << "ResourceManager->getSprite: Can't find animated sprite by " << spriteName << std::endl;
 
     return nullptr;
+}
+
+void ResourceManager::setExecutablePath(const std::string &executablePath) {
+    size_t found = executablePath.find_last_of("/\\");
+    m_path = executablePath.substr(0, found);
+}
+
+void ResourceManager::unloadResources() {
+    m_shaderPrograms.clear();
+    m_textures.clear();
+    m_sprites.clear();
+    m_animatedSprites.clear();
+    m_path.clear();
 }
