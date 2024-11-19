@@ -39,10 +39,7 @@ void RenderEngine::AnimatedSprite::render() const {
                 subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
                 subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
                 subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-
-                subTexture.rightTopUV.x, subTexture.rightTopUV.y,
                 subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
-                subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);

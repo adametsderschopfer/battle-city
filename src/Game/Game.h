@@ -2,7 +2,10 @@
 
 #include <cstdint>
 #include <array>
+#include <memory>
 #include "glm/ext/vector_int2.hpp"
+
+class Tank;
 
 class Game {
 public:
@@ -16,7 +19,7 @@ public:
 
     void setKey(int key, int action);
 
-    bool init() const;
+    bool init();
 
 private:
     glm::ivec2 m_windowSize;
@@ -28,4 +31,6 @@ private:
         Pause
     };
     EGameState m_eCurrentGameState;
+
+    std::unique_ptr<Tank> m_pTank;
 };

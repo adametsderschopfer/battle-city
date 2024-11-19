@@ -22,6 +22,8 @@ add_executable(${PROJECT_NAME}
         src/Renderer/AnimatedSprite.h
         src/Game/Game.cpp
         src/Game/Game.h
+        src/Game/Tank.cpp
+        src/Game/Tank.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
