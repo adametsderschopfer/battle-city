@@ -3,12 +3,11 @@
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 
-#include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 RenderEngine::Sprite::Sprite(
         const std::shared_ptr<Texture2D> &pTexture,
-        const std::string initialSubTextureName,
+        const std::string &initialSubTextureName,
         const std::shared_ptr<ShaderProgram> &pShaderProgram,
         const glm::vec2 &position,
         const glm::vec2 &size,
@@ -33,7 +32,7 @@ RenderEngine::Sprite::Sprite(
             0.f, 0.f,
     };
 
-    auto subTexture = pTexture->getSubTexture(initialSubTextureName);
+    auto subTexture = m_pTexture->getSubTexture(initialSubTextureName);
 
     const GLfloat textureCoords[] = {
             // U  V
@@ -51,13 +50,13 @@ RenderEngine::Sprite::Sprite(
 
     glGenBuffers(1, &m_vertexCoordsVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexCoordsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), vertexCoords, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), &vertexCoords, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     glGenBuffers(1, &m_textureCoordsVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), &textureCoords, GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 

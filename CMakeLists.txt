@@ -18,6 +18,8 @@ add_executable(${PROJECT_NAME}
         src/Renderer/Texture2D.h
         src/Renderer/Sprite.cpp
         src/Renderer/Sprite.h
+        src/Renderer/AnimatedSprite.cpp
+        src/Renderer/AnimatedSprite.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
