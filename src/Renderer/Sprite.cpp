@@ -4,6 +4,7 @@
 #include "Texture2D.h"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "Renderer.h"
 
 RenderEngine::Sprite::Sprite(
         const std::shared_ptr<Texture2D> &pTexture,
@@ -41,16 +42,16 @@ RenderEngine::Sprite::Sprite(
     };
 
     m_vertexCoordsBuffer.init(vertexCoords, 2 * 4 * sizeof(GLfloat));
-    Renderer::VertexBufferLayout vertexCoordsLayout;
+    RenderEngine::VertexBufferLayout vertexCoordsLayout;
     vertexCoordsLayout.addElementLayoutFloat(2, false);
     m_vertexArray.addBuffer(m_vertexCoordsBuffer, vertexCoordsLayout);
 
     m_textureCoordsBuffer.init(textureCoords, 2 * 4 * sizeof(GLfloat));
-    Renderer::VertexBufferLayout textureCoordsLayout;
+    RenderEngine::VertexBufferLayout textureCoordsLayout;
     textureCoordsLayout.addElementLayoutFloat(2, false);
     m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);
 
-    m_indexBuffer.init(indices, 6 * sizeof(GLuint));
+    m_indexBuffer.init(indices, 6);
 
     m_vertexArray.unbind();
     m_indexBuffer.unbind();
@@ -61,6 +62,10 @@ RenderEngine::Sprite::~Sprite() {
 
 void RenderEngine::Sprite::render() const {
     m_pShaderProgram->use();
+
+    /*
+     * TODO: Create *Camera* class and move everything for projection, model and other matrix control
+     * */
 
     glm::mat4 model(1.f);
 
@@ -73,19 +78,12 @@ void RenderEngine::Sprite::render() const {
 
     model = glm::scale(model, glm::vec3(m_size, 1.f));
 
-    m_vertexArray.bind();
     m_pShaderProgram->setMatrix4("modelMat", model);
 
     glActiveTexture(GL_TEXTURE0);
     m_pTexture->bind();
 
-    glDrawElements(
-            GL_TRIANGLES,
-            6,
-            GL_UNSIGNED_INT,
-            nullptr
-    );
-    m_vertexArray.unbind();
+    RenderEngine::Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
 }
 
 void RenderEngine::Sprite::setPosition(const glm::vec2 &position) {

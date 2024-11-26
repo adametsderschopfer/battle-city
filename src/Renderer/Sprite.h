@@ -48,10 +48,10 @@ namespace RenderEngine {
         glm::vec2 m_position{};
         float m_rotation{};
 
-        Renderer::VertexArray m_vertexArray;
-        Renderer::VertexBuffer m_vertexCoordsBuffer;
-        Renderer::VertexBuffer m_textureCoordsBuffer;
-        Renderer::IndexBuffer m_indexBuffer;
+        RenderEngine::VertexArray m_vertexArray;
+        RenderEngine::VertexBuffer m_vertexCoordsBuffer;
+        RenderEngine::VertexBuffer m_textureCoordsBuffer;
+        RenderEngine::IndexBuffer m_indexBuffer;
     };
 }
 

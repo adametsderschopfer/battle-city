@@ -1,24 +1,24 @@
 #include "VertexArray.h"
 
-Renderer::VertexArray::VertexArray() {
+RenderEngine::VertexArray::VertexArray() {
     glGenVertexArrays(1, &m_id);
 }
 
-Renderer::VertexArray::~VertexArray() { glDeleteVertexArrays(1, &m_id); }
+RenderEngine::VertexArray::~VertexArray() { glDeleteVertexArrays(1, &m_id); }
 
-Renderer::VertexArray &Renderer::VertexArray::operator=(Renderer::VertexArray &&vertexArray) noexcept {
+RenderEngine::VertexArray &RenderEngine::VertexArray::operator=(RenderEngine::VertexArray &&vertexArray) noexcept {
     m_id = vertexArray.m_id;
     vertexArray.m_id = 0;
     return *this;
 }
 
-Renderer::VertexArray::VertexArray(Renderer::VertexArray &&vertexArray) noexcept {
+RenderEngine::VertexArray::VertexArray(RenderEngine::VertexArray &&vertexArray) noexcept {
     m_id = vertexArray.m_id;
     vertexArray.m_id = 0;
 }
 
-void Renderer::VertexArray::addBuffer(const Renderer::VertexBuffer &vertexBuffer,
-                                      const VertexBufferLayout &vertexBufferLayout) {
+void RenderEngine::VertexArray::addBuffer(const RenderEngine::VertexBuffer &vertexBuffer,
+                                          const VertexBufferLayout &vertexBufferLayout) {
     bind();
     vertexBuffer.bind();
     const auto &layoutElements = vertexBufferLayout.getLayoutElements();
@@ -40,10 +40,10 @@ void Renderer::VertexArray::addBuffer(const Renderer::VertexBuffer &vertexBuffer
     m_elementsCount += layoutElements.size();
 }
 
-void Renderer::VertexArray::bind() const {
+void RenderEngine::VertexArray::bind() const {
     glBindVertexArray(m_id);
 }
 
-void Renderer::VertexArray::unbind() const {
+void RenderEngine::VertexArray::unbind() const {
     glBindVertexArray(0);
 }

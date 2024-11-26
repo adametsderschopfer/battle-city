@@ -7,6 +7,7 @@
 
 #include "Game/Game.h"
 #include "Resources/ResourceManager.h"
+#include "Renderer/Renderer.h"
 
 glm::ivec2 g_windowSize(1024, 720);
 Game g_game(g_windowSize);
@@ -15,7 +16,7 @@ void glfwWindowSizeCallback(GLFWwindow *pWindow, int width, int height) {
     g_windowSize.x = width;
     g_windowSize.y = height;
 
-    glViewport(0, 0, g_windowSize.x, g_windowSize.y);
+    RenderEngine::Renderer::setViewport(g_windowSize.x, g_windowSize.y, 0, 0);
 };
 
 void glfwKeyCallback(GLFWwindow *pWindow, int key, int scancode, int action, int mode) {
@@ -64,8 +65,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    glClearColor(0, 0, 0, 1);
-
+    RenderEngine::Renderer::setClearColor(0, 0, 0, 1);
     {
         ResourceManager::setExecutablePath(argv[0]);
         if (!g_game.init()) {
@@ -73,16 +73,13 @@ int main(int argc, char **argv) {
         }
 
         auto lastTime = std::chrono::high_resolution_clock::now();
-
         while (!glfwWindowShouldClose(pWindow)) {
             auto currentTime = std::chrono::high_resolution_clock::now();
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
             lastTime = currentTime;
 
             g_game.update(duration);
-
-            glClear(GL_COLOR_BUFFER_BIT);
-
+            RenderEngine::Renderer::clear();
             g_game.render();
 
             glfwSwapBuffers(pWindow);
