@@ -9,23 +9,29 @@ project(${PROJECT_NAME} VERSION 1.0 LANGUAGES CXX)
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/Renderer/ShaderProgram.cpp
-        src/Renderer/ShaderProgram.h
+
         src/Resources/ResourceManager.cpp
         src/Resources/ResourceManager.h
         src/Resources/stb_image.h
+
+        src/Renderer/ShaderProgram.cpp
+        src/Renderer/ShaderProgram.h
         src/Renderer/Texture2D.cpp
         src/Renderer/Texture2D.h
         src/Renderer/Sprite.cpp
         src/Renderer/Sprite.h
         src/Renderer/AnimatedSprite.cpp
         src/Renderer/AnimatedSprite.h
+
+        src/Renderer/VertexBuffer.cpp
+        src/Renderer/VertexBuffer.h
+        src/Renderer/IndexBuffer.cpp
+        src/Renderer/IndexBuffer.h
+
         src/Game/Game.cpp
         src/Game/Game.h
         src/Game/Tank.cpp
         src/Game/Tank.h
-        src/Renderer/VertexBuffer.cpp
-        src/Renderer/VertexBuffer.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)

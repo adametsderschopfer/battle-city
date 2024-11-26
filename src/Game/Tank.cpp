@@ -43,6 +43,11 @@ void Tank::setOrientation(const Tank::EOrientation &eOrientation) {
             m_moveOffset.x = 0.f;
             m_moveOffset.y = 1.f;
             break;
+        case EOrientation::Right:
+            m_pSprite->setState("tankRightState");
+            m_moveOffset.x = 1.f;
+            m_moveOffset.y = 0.f;
+            break;
         case EOrientation::Bottom:
             m_pSprite->setState("tankBottomState");
             m_moveOffset.x = 0.f;
@@ -51,11 +56,6 @@ void Tank::setOrientation(const Tank::EOrientation &eOrientation) {
         case EOrientation::Left:
             m_pSprite->setState("tankLeftState");
             m_moveOffset.x = -1.f;
-            m_moveOffset.y = 0.f;
-            break;
-        case EOrientation::Right:
-            m_pSprite->setState("tankRightState");
-            m_moveOffset.x = 1.f;
             m_moveOffset.y = 0.f;
             break;
     }

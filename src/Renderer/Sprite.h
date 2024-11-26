@@ -1,5 +1,8 @@
 #pragma once
 
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+
 #include "glad/glad.h"
 #include "glm/vec2.hpp"
 
@@ -45,9 +48,10 @@ namespace RenderEngine {
         float m_rotation{};
 
         GLuint m_VAO{};
-        GLuint m_vertexCoordsVBO{};
-        GLuint m_textureCoordsVBO{};
-        GLuint m_EBO{};
+
+        Renderer::VertexBuffer m_vertexCoordsBuffer;
+        Renderer::VertexBuffer m_textureCoordsBuffer;
+        Renderer::IndexBuffer m_indexBuffer;
     };
 }
 

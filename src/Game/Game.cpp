@@ -30,6 +30,10 @@ void Game::render() const {
 
 void Game::update(const uint64_t delta) const {
     if (m_pTank) {
+        /*
+         * TODO: Refactor
+         * */
+
         if (m_keys[GLFW_KEY_W]) {
             m_pTank->setOrientation(Tank::EOrientation::Top);
             m_pTank->move(true);
