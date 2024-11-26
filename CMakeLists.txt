@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 
-set(PROJECT_NAME 2d_game_engine)
+set(PROJECT_NAME battle_city)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,6 +24,8 @@ add_executable(${PROJECT_NAME}
         src/Game/Game.h
         src/Game/Tank.cpp
         src/Game/Tank.h
+        src/Renderer/VertexBuffer.cpp
+        src/Renderer/VertexBuffer.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
