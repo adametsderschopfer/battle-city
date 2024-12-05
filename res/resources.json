@@ -1,0 +1,166 @@
+{
+  "shaders": [
+    {
+      "name": "SpriteShader",
+      "vertexFilePath": "res/shaders/sprite/vSprite.vert",
+      "fragmentFilePath": "res/shaders/sprite/fSprite.frag"
+    }
+  ],
+  "textureAtlases": [
+    {
+      "name": "MapTextureAtlas",
+      "filePath": "res/textures/example/map_16x16.png",
+      "width": 128,
+      "height": 128,
+      "subTexture": {
+        "width": 16,
+        "height": 16,
+        "items": [
+          "fullBricks",
+          "topBricks",
+          "bottomBricks",
+          "leftBricks",
+          "rightBricks",
+          "topLeftBrick",
+          "topRightBrick",
+          "bottomLeftBrick",
+          "bottomRightBrick",
+          "fullConcrete",
+          "topConcrete",
+          "bottomConcrete",
+          "leftConcrete",
+          "rightConcrete",
+          "topLeftConcrete",
+          "topRightConcrete",
+          "bottomLeftConcrete",
+          "bottomRightConcrete",
+          "water1",
+          "water2",
+          "water3",
+          "trees",
+          "ice",
+          "wall",
+          "eagle",
+          "deadEagle",
+          "nothing",
+          "respawn1",
+          "respawn2",
+          "respawn3",
+          "respawn4"
+        ]
+      }
+    },
+    {
+      "name": "TanksTextureAtlas",
+      "filePath": "res/textures/battle-city/tanks.png",
+      "width": 256,
+      "height": 256,
+      "subTexture": {
+        "width": 16,
+        "height": 16,
+        "items": [
+          "yellowType1_Top1",
+          "yellowType1_Top2",
+          "yellowType1_Left1",
+          "yellowType1_Left2",
+          "yellowType1_Bottom1",
+          "yellowType1_Bottom2",
+          "yellowType1_Right1",
+          "yellowType1_Right2",
+          "whiteType1_Top1",
+          "whiteType1_Top2",
+          "whiteType1_Left1",
+          "whiteType1_Left2",
+          "whiteType1_Bottom1",
+          "whiteType1_Bottom2",
+          "whiteType1_Right1",
+          "whiteType1_Right2"
+        ]
+      }
+    }
+  ],
+  "animatedSprites": [
+    {
+      "name": "TanksAnimatedSprite",
+      "textureAtlasName": "TanksTextureAtlas",
+      "shaderName": "SpriteShader",
+      "initialWidth": 100,
+      "initialHeight": 100,
+      "initialSubTexture": "yellowType1_Top1",
+      "states": [
+        {
+          "stateName": "tankTopState",
+          "frames": [
+            {
+              "subTextureName": "yellowType1_Top1",
+              "duration": 500000000
+            },
+            {
+              "subTextureName": "yellowType1_Top2",
+              "duration": 500000000
+            }
+          ]
+        },
+        {
+          "stateName": "tankLeftState",
+          "frames": [
+            {
+              "subTextureName": "yellowType1_Left1",
+              "duration": 500000000
+            },
+            {
+              "subTextureName": "yellowType1_Left2",
+              "duration": 500000000
+            }
+          ]
+        },
+        {
+          "stateName": "tankBottomState",
+          "frames": [
+            {
+              "subTextureName": "yellowType1_Bottom1",
+              "duration": 500000000
+            },
+            {
+              "subTextureName": "yellowType1_Bottom2",
+              "duration": 500000000
+            }
+          ]
+        },
+        {
+          "stateName": "tankRightState",
+          "frames": [
+            {
+              "subTextureName": "yellowType1_Right1",
+              "duration": 500000000
+            },
+            {
+              "subTextureName": "yellowType1_Right2",
+              "duration": 500000000
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "description": [
+        "DDDDDDDDDDDDD",
+        "D1D1D1D1D1D1D",
+        "D4D4D4D4D4D4D",
+        "D4D4D4D4D4D4D",
+        "D4D4D494D4D4D",
+        "D4D4D3D3D4D4D",
+        "D3D3D1D1D3D3D",
+        "1D11D3D3D11D1",
+        "8D33D1D1D33D8",
+        "D1D1D444D1D1D",
+        "D4D4D4D4D4D4D",
+        "D4D4D3D3D4D4D",
+        "D4D4DH1GDDDDD",
+        "DDDDD0E2DDDDD"
+      ]
+    }
+  ]
+}
