@@ -11,7 +11,8 @@ RenderEngine::Sprite::Sprite(
         const std::string &initialSubTextureName,
         const std::shared_ptr<ShaderProgram> &pShaderProgram
 ) : m_pTexture(pTexture),
-    m_pShaderProgram(pShaderProgram) {
+    m_pShaderProgram(pShaderProgram),
+    m_lastFrameIdx(0) {
     const GLfloat vertexCoords[] = {
             // X  Y
             0.f, 0.f,
@@ -54,12 +55,27 @@ RenderEngine::Sprite::Sprite(
 RenderEngine::Sprite::~Sprite() {
 }
 
-void RenderEngine::Sprite::render(const glm::vec2 &position, const glm::vec2 &size, const float &rotation) const {
-    m_pShaderProgram->use();
+void RenderEngine::Sprite::render(
+        const glm::vec2 &position,
+        const glm::vec2 &size,
+        const float &rotation,
+        size_t frameIdx
+) const {
+    if (frameIdx != m_lastFrameIdx) {
+        m_lastFrameIdx = frameIdx;
 
-    /*
-     * TODO: Create *Camera* class and move everything for projection, model and other matrix control
-     * */
+        const FrameDescription &currentFrameDescription = m_frameDescriptions[frameIdx];
+        const GLfloat textureCoords[] = {
+                currentFrameDescription.leftBottomUV.x, currentFrameDescription.leftBottomUV.y,
+                currentFrameDescription.leftBottomUV.x, currentFrameDescription.rightTopUV.y,
+                currentFrameDescription.rightTopUV.x, currentFrameDescription.rightTopUV.y,
+                currentFrameDescription.rightTopUV.x, currentFrameDescription.leftBottomUV.y,
+        };
+
+        m_textureCoordsBuffer.update(textureCoords, 2 * 4 * sizeof(GLfloat));
+    }
+
+    m_pShaderProgram->use();
 
     glm::mat4 model(1.f);
 
@@ -78,4 +94,16 @@ void RenderEngine::Sprite::render(const glm::vec2 &position, const glm::vec2 &si
     m_pTexture->bind();
 
     RenderEngine::Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
+}
+
+size_t RenderEngine::Sprite::getFramesCount() const {
+    return m_frameDescriptions.size();
+}
+
+uint64_t RenderEngine::Sprite::getFrameDuration(size_t frameIdx) const {
+    return m_frameDescriptions[frameIdx].duration;
+}
+
+void RenderEngine::Sprite::insertFrames(std::vector<FrameDescription> frameDescriptions) {
+    m_frameDescriptions = std::move(frameDescriptions);
 }

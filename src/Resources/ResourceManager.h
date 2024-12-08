@@ -11,10 +11,6 @@ namespace RenderEngine {
     class Texture2D;
 
     class Sprite;
-
-    class AnimatedSprite;
-
-    class Level;
 }
 
 class ResourceManager {
@@ -65,16 +61,6 @@ public:
 
     static std::shared_ptr<RenderEngine::Sprite> getSprite(const std::string &spriteName);
 
-    /* --- AnimatedSprite ---  */
-    static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(
-            const std::string &spriteName,
-            const std::string &textureName,
-            const std::string &shaderProgramName,
-            const std::string &subTextureName = "default"
-    );
-
-    static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string &spriteName);
-
     static bool loadJSONResources(const std::string &JSONPath);
 
     static std::vector<const std::vector<std::string>> getLevels() { return m_levels; };
@@ -88,9 +74,6 @@ private:
 
     typedef std::map<const std::string, std::shared_ptr<RenderEngine::Sprite>> SpriteMap;
     static SpriteMap m_sprites;
-
-    typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpriteMap;
-    static AnimatedSpriteMap m_animatedSprites;
 
     static std::vector<const std::vector<std::string>> m_levels;
 

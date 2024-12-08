@@ -8,7 +8,6 @@
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/Sprite.h"
-#include "../Renderer/AnimatedSprite.h"
 #include "../Resources/ResourceManager.h"
 
 #include <GLFW/glfw3.h>
@@ -19,9 +18,7 @@ Game::Game(const glm::ivec2 &windowSize)
     m_keys.fill(false);
 }
 
-Game::~Game() {
-
-}
+Game::~Game() = default;
 
 void Game::render() const {
     if (m_pLevel) {
@@ -43,10 +40,7 @@ void Game::update(const uint64_t delta) const {
          * TODO: Refactor
          * */
 
-        if (m_keys[GLFW_KEY_W]) {
-            m_pTank->setOrientation(Tank::EOrientation::Top);
-            m_pTank->move(true);
-        } else if (m_keys[GLFW_KEY_A]) {
+        if (m_keys[GLFW_KEY_A]) {
             m_pTank->setOrientation(Tank::EOrientation::Left);
             m_pTank->move(true);
         } else if (m_keys[GLFW_KEY_D]) {
@@ -54,6 +48,9 @@ void Game::update(const uint64_t delta) const {
             m_pTank->move(true);
         } else if (m_keys[GLFW_KEY_S]) {
             m_pTank->setOrientation(Tank::EOrientation::Bottom);
+            m_pTank->move(true);
+        } else if (m_keys[GLFW_KEY_W]) {
+            m_pTank->setOrientation(Tank::EOrientation::Top);
             m_pTank->move(true);
         } else {
             m_pTank->move(false);
@@ -82,15 +79,9 @@ bool Game::init() {
         return false;
     }
 
-    auto pTanksTextureAtlas = ResourceManager::getTexture("TanksTextureAtlas");
+    auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
     if (!pTextureAtlas) {
         std::cerr << "Can't find texture atlas TanksTextureAtlas" << std::endl;
-        return false;
-    }
-
-    auto pTanksAnimatedSprite = ResourceManager::getAnimatedSprite("TanksAnimatedSprite");
-    if (!pTanksAnimatedSprite) {
-        std::cerr << "Can't find animated sprite TanksAnimatedSprite" << std::endl;
         return false;
     }
 
@@ -108,7 +99,11 @@ bool Game::init() {
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     m_pTank = std::make_unique<Tank>(
-            pTanksAnimatedSprite,
+            ResourceManager::getSprite("tankSprite_top"),
+            ResourceManager::getSprite("tankSprite_bottom"),
+            ResourceManager::getSprite("tankSprite_left"),
+            ResourceManager::getSprite("tankSprite_right"),
+
             0.00000005f,
             glm::vec2(0.f),
             glm::vec2(16.f, 16.f),

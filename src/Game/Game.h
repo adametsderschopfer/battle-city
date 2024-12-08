@@ -11,7 +11,7 @@ class Level;
 
 class Game {
 public:
-    Game(const glm::ivec2 &windowSize);
+    explicit Game(const glm::ivec2 &windowSize);
 
     ~Game();
 

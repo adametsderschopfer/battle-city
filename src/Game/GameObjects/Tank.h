@@ -2,10 +2,12 @@
 
 #include "glm/vec2.hpp"
 #include "memory"
+
 #include "../../Core/GameObject.h"
+#include "../../Renderer/SpriteAnimator.h"
 
 namespace RenderEngine {
-    class AnimatedSprite;
+    class Sprite;
 }
 
 class Tank : public GameObject {
@@ -18,7 +20,11 @@ public:
     };
 
     Tank(
-            std::shared_ptr<RenderEngine::AnimatedSprite> &pSprite,
+            std::shared_ptr<RenderEngine::Sprite> pSprite_top,
+            std::shared_ptr<RenderEngine::Sprite> pSprite_bottom,
+            std::shared_ptr<RenderEngine::Sprite> pSprite_left,
+            std::shared_ptr<RenderEngine::Sprite> pSprite_right,
+
             const float &velocity,
             const glm::vec2 &position,
             const glm::vec2 &size,
@@ -35,8 +41,17 @@ public:
 
 
 private:
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_top;
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_bottom;
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_left;
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_right;
+
+    RenderEngine::SpriteAnimator m_spriteAnimator_top;
+    RenderEngine::SpriteAnimator m_spriteAnimator_bottom;
+    RenderEngine::SpriteAnimator m_spriteAnimator_left;
+    RenderEngine::SpriteAnimator m_spriteAnimator_right;
+
     EOrientation m_eOrientation;
-    std::shared_ptr<RenderEngine::AnimatedSprite> m_pSprite;
     bool m_move;
     float m_velocity;
     glm::vec2 m_moveOffset;

@@ -33,9 +33,9 @@ void RenderEngine::Renderer::setViewport(
         unsigned int offsetBottom
 ) {
     glViewport(
-            width,
-            height,
             offsetLeft,
-            offsetBottom
+            offsetBottom,
+            width,
+            height
     );
 }

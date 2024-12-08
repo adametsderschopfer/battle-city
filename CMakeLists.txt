@@ -20,8 +20,6 @@ add_executable(${PROJECT_NAME}
         src/Renderer/Texture2D.h
         src/Renderer/Sprite.cpp
         src/Renderer/Sprite.h
-        src/Renderer/AnimatedSprite.cpp
-        src/Renderer/AnimatedSprite.h
 
         src/Renderer/VertexBuffer.cpp
         src/Renderer/VertexBuffer.h
@@ -44,6 +42,8 @@ add_executable(${PROJECT_NAME}
         src/Game/Level.h
         src/Game/GameObjects/BrickWall.cpp
         src/Game/GameObjects/BrickWall.h
+        src/Renderer/SpriteAnimator.cpp
+        src/Renderer/SpriteAnimator.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
