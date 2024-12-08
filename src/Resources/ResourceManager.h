@@ -13,6 +13,8 @@ namespace RenderEngine {
     class Sprite;
 
     class AnimatedSprite;
+
+    class Level;
 }
 
 class ResourceManager {
@@ -58,8 +60,6 @@ public:
             const std::string &spriteName,
             const std::string &textureName,
             const std::string &shaderProgramName,
-            unsigned int spriteWidth,
-            unsigned int spriteHeight,
             const std::string &subTextureName = "default"
     );
 
@@ -70,14 +70,14 @@ public:
             const std::string &spriteName,
             const std::string &textureName,
             const std::string &shaderProgramName,
-            unsigned int spriteWidth,
-            unsigned int spriteHeight,
             const std::string &subTextureName = "default"
     );
 
     static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string &spriteName);
 
     static bool loadJSONResources(const std::string &JSONPath);
+
+    static std::vector<const std::vector<std::string>> getLevels() { return m_levels; };
 
 private:
     typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramMap;
@@ -91,6 +91,8 @@ private:
 
     typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpriteMap;
     static AnimatedSpriteMap m_animatedSprites;
+
+    static std::vector<const std::vector<std::string>> m_levels;
 
     static std::string m_path;
 

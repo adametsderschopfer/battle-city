@@ -9,15 +9,9 @@
 RenderEngine::Sprite::Sprite(
         const std::shared_ptr<Texture2D> &pTexture,
         const std::string &initialSubTextureName,
-        const std::shared_ptr<ShaderProgram> &pShaderProgram,
-        const glm::vec2 &position,
-        const glm::vec2 &size,
-        const float &rotation
+        const std::shared_ptr<ShaderProgram> &pShaderProgram
 ) : m_pTexture(pTexture),
-    m_pShaderProgram(pShaderProgram),
-    m_position(position),
-    m_size(size),
-    m_rotation(rotation) {
+    m_pShaderProgram(pShaderProgram) {
     const GLfloat vertexCoords[] = {
             // X  Y
             0.f, 0.f,
@@ -60,7 +54,7 @@ RenderEngine::Sprite::Sprite(
 RenderEngine::Sprite::~Sprite() {
 }
 
-void RenderEngine::Sprite::render() const {
+void RenderEngine::Sprite::render(const glm::vec2 &position, const glm::vec2 &size, const float &rotation) const {
     m_pShaderProgram->use();
 
     /*
@@ -69,14 +63,14 @@ void RenderEngine::Sprite::render() const {
 
     glm::mat4 model(1.f);
 
-    model = glm::translate(model, glm::vec3(m_position, 0.f));
+    model = glm::translate(model, glm::vec3(position, 0.f));
 
     /*Translate origin, rotate and translate back*/
-    model = glm::translate(model, glm::vec3(.5f * m_size.x, .5f * m_size.y, 0.f));
-    model = glm::rotate(model, glm::radians(m_rotation), glm::vec3(.0f, 0.f, 1.f));
-    model = glm::translate(model, glm::vec3(-.5f * m_size.x, -.5f * m_size.y, 0.f));
+    model = glm::translate(model, glm::vec3(.5f * size.x, .5f * size.y, 0.f));
+    model = glm::rotate(model, glm::radians(rotation), glm::vec3(.0f, 0.f, 1.f));
+    model = glm::translate(model, glm::vec3(-.5f * size.x, -.5f * size.y, 0.f));
 
-    model = glm::scale(model, glm::vec3(m_size, 1.f));
+    model = glm::scale(model, glm::vec3(size, 1.f));
 
     m_pShaderProgram->setMatrix4("modelMat", model);
 
@@ -84,16 +78,4 @@ void RenderEngine::Sprite::render() const {
     m_pTexture->bind();
 
     RenderEngine::Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
-}
-
-void RenderEngine::Sprite::setPosition(const glm::vec2 &position) {
-    m_position = position;
-}
-
-void RenderEngine::Sprite::setSize(const glm::vec2 &size) {
-    m_size = size;
-}
-
-void RenderEngine::Sprite::setRotation(const float rotation) {
-    m_rotation = rotation;
 }

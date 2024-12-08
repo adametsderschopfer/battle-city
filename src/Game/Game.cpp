@@ -3,7 +3,8 @@
 #include "chrono"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Tank.h"
+#include "GameObjects/Tank.h"
+#include "Level.h"
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/Sprite.h"
@@ -23,12 +24,20 @@ Game::~Game() {
 }
 
 void Game::render() const {
+    if (m_pLevel) {
+        m_pLevel->render();
+    }
+
     if (m_pTank) {
         m_pTank->render();
     }
 }
 
 void Game::update(const uint64_t delta) const {
+    if (m_pLevel) {
+        m_pLevel->update(delta);
+    }
+
     if (m_pTank) {
         /*
          * TODO: Refactor
@@ -61,15 +70,15 @@ void Game::setKey(int key, int action) {
 bool Game::init() {
     ResourceManager::loadJSONResources("res/resources.json");
 
-    auto pSpriteShaderProgram = ResourceManager::getShaderProgram("SpriteShader");
+    auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShader");
     if (!pSpriteShaderProgram) {
-        std::cerr << "Can't find shader program SpriteShader" << std::endl;
+        std::cerr << "Can't find shader program spriteShader" << std::endl;
         return false;
     }
 
-    auto pTextureAtlas = ResourceManager::getTexture("MapTextureAtlas");
+    auto pTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
     if (!pTextureAtlas) {
-        std::cerr << "Can't find texture atlas MapTextureAtlas" << std::endl;
+        std::cerr << "Can't find texture atlas mapTextureAtlas" << std::endl;
         return false;
     }
 
@@ -78,22 +87,6 @@ bool Game::init() {
         std::cerr << "Can't find texture atlas TanksTextureAtlas" << std::endl;
         return false;
     }
-
-//    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite(
-//            "NewAnimatedWater",
-//            "MapTextureAtlas",
-//            "SpriteShader",
-//            50, 50,
-//            "water1"
-//    );
-//    pAnimatedSprite->setPosition(glm::vec2(100, 100));
-//    std::vector<std::pair<std::string, uint64_t>> waterState;
-//    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water1", 1000000000));
-//    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water2", 1000000000));
-//    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water3", 1000000000));
-//
-//    pAnimatedSprite->insertState("waterState", std::move(waterState));
-//    pAnimatedSprite->setState("waterState");
 
     auto pTanksAnimatedSprite = ResourceManager::getAnimatedSprite("TanksAnimatedSprite");
     if (!pTanksAnimatedSprite) {
@@ -116,8 +109,14 @@ bool Game::init() {
 
     m_pTank = std::make_unique<Tank>(
             pTanksAnimatedSprite,
-            0.00000015f,
-            glm::vec2(100.f, 100.f)
+            0.00000005f,
+            glm::vec2(0.f),
+            glm::vec2(16.f, 16.f),
+            0.f
+    );
+
+    m_pLevel = std::make_unique<Level>(
+            ResourceManager::getLevels()[0]
     );
 
     return true;

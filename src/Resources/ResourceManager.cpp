@@ -20,7 +20,7 @@ ResourceManager::Texture2DMap ResourceManager::m_textures;
 ResourceManager::SpriteMap ResourceManager::m_sprites;
 ResourceManager::AnimatedSpriteMap ResourceManager::m_animatedSprites;
 std::string ResourceManager::m_path;
-
+std::vector<const std::vector<std::string>> ResourceManager::m_levels;
 
 std::shared_ptr<RenderEngine::ShaderProgram>
 ResourceManager::loadShaders(
@@ -143,8 +143,6 @@ ResourceManager::loadSprite(
         const std::string &spriteName,
         const std::string &textureName,
         const std::string &shaderProgramName,
-        const unsigned int spriteWidth,
-        const unsigned int spriteHeight,
         const std::string &subTextureName
 ) {
     auto pTexture = getTexture(textureName);
@@ -164,10 +162,7 @@ ResourceManager::loadSprite(
             std::make_shared<RenderEngine::Sprite>(
                     pTexture,
                     subTextureName,
-                    pShaderProgram,
-                    glm::vec2(.0f, .0f),
-                    glm::vec2(spriteWidth, spriteHeight),
-                    .0f
+                    pShaderProgram
             )
     ).first->second;
 
@@ -194,6 +189,28 @@ ResourceManager::loadTextureAtlas(
         const unsigned int subTextureWidth,
         const unsigned int subTextureHeight
 ) {
+    /*
+     * TODO:
+     *  Сейчас текстурный атлас грузится линейно, читая каждую строку со спрайтами
+     *  и сопоставляя каждый пройденный элемент с текущим индексом в массиве.
+     *  *
+     *  Нам нужно в массиве уметь управлять любым элементом атласа и задавать в массиве, название спрайта
+     *  координаты спрайта на атласе по X/Y
+     *  *
+     *  Example:
+     *      name: betonBlock
+     *      spriteX: 32
+     *      spriteY: 32
+     *  Y
+     *  |
+     *  |   |S|
+     *  |
+     *  —————————————————— X
+     *  *
+     *  1. Изменить конфиг файл
+     *  2. Изменить способ парсинга спрайтов в атласе
+     * */
+
     auto pTexture = loadTexture(textureName, texturePath);
     if (pTexture) {
         unsigned int currentTextureOffsetX = 0;
@@ -231,8 +248,6 @@ ResourceManager::loadAnimatedSprite(
         const std::string &spriteName,
         const std::string &textureName,
         const std::string &shaderProgramName,
-        unsigned int spriteWidth,
-        unsigned int spriteHeight,
         const std::string &subTextureName
 ) {
     auto pTexture = getTexture(textureName);
@@ -252,10 +267,7 @@ ResourceManager::loadAnimatedSprite(
             std::make_shared<RenderEngine::AnimatedSprite>(
                     pTexture,
                     subTextureName,
-                    pShaderProgram,
-                    glm::vec2(.0f, .0f),
-                    glm::vec2(spriteWidth, spriteHeight),
-                    .0f
+                    pShaderProgram
             )
     ).first->second;
 
@@ -333,12 +345,29 @@ bool ResourceManager::loadJSONResources(const std::string &JSONPath) {
                 subTextures.emplace_back(currSubTexture.GetString());
             }
 
-            auto pTextureAtlas = ResourceManager::loadTextureAtlas(
+            auto pTextureAtlas = loadTextureAtlas(
                     name,
                     filePath,
                     subTextures,
                     subTextureWidth,
                     subTextureHeight
+            );
+        }
+    }
+
+    auto spritesIt = document.FindMember("sprites");
+    if (spritesIt != document.MemberEnd()) {
+        for (const auto &currentAnimatedSprite: spritesIt->value.GetArray()) {
+            const std::string name = currentAnimatedSprite["name"].GetString();
+            const std::string textureAtlasName = currentAnimatedSprite["textureAtlas"].GetString();
+            const std::string shaderName = currentAnimatedSprite["shaderName"].GetString();
+            const std::string subTextureName = currentAnimatedSprite["subTextureName"].GetString();
+
+            loadSprite(
+                    name,
+                    textureAtlasName,
+                    shaderName,
+                    subTextureName
             );
         }
     }
@@ -349,15 +378,12 @@ bool ResourceManager::loadJSONResources(const std::string &JSONPath) {
             const std::string name = currentAnimatedSprite["name"].GetString();
             const std::string textureAtlasName = currentAnimatedSprite["textureAtlasName"].GetString();
             const std::string shaderName = currentAnimatedSprite["shaderName"].GetString();
-            const u_int initialWidth = currentAnimatedSprite["initialWidth"].GetUint();
-            const u_int initialHeight = currentAnimatedSprite["initialHeight"].GetUint();
             const std::string initialSubTexture = currentAnimatedSprite["initialSubTexture"].GetString();
 
-            auto pAnimatedSprite = ResourceManager::loadAnimatedSprite(
+            auto pAnimatedSprite = loadAnimatedSprite(
                     name,
                     textureAtlasName,
                     shaderName,
-                    initialWidth, initialHeight,
                     initialSubTexture
             );
             if (!pAnimatedSprite) {
@@ -394,11 +420,24 @@ bool ResourceManager::loadJSONResources(const std::string &JSONPath) {
             const auto description = currentLevel["description"].GetArray();
             std::vector<std::string> levelRows;
             levelRows.reserve(description.Size());
+
+            size_t maxLength = 0;
+
             for (const auto &currentRow: description) {
                 levelRows.emplace_back(currentRow.GetString());
+                if (maxLength < levelRows.back().length()) {
+                    maxLength = levelRows.back().length();
+                }
             }
 
-            // todo: create level
+            for (auto &currentRow: levelRows) {
+                while (currentRow.length() < maxLength) {
+                    // TODO: USE CONSTANT for empty object
+                    currentRow.append("D");
+                }
+            }
+
+            m_levels.emplace_back(std::move(levelRows));
         }
     }
 

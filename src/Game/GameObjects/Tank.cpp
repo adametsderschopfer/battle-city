@@ -1,23 +1,23 @@
 #include "Tank.h"
 
-#include "../Renderer/AnimatedSprite.h"
+#include "../../Renderer/AnimatedSprite.h"
 
 Tank::Tank(
         std::shared_ptr<RenderEngine::AnimatedSprite> &pSprite,
         const float &velocity,
-        const glm::vec2 &position
-) :
-        m_pSprite(pSprite),
-        m_position(position),
-        m_velocity(velocity),
-        m_moveOffset(glm::vec2(0.f, 1.f)),
-        m_eOrientation(EOrientation::Top),
-        m_move(false) {
-    m_pSprite->setPosition(m_position);
+        const glm::vec2 &position,
+        const glm::vec2 &size,
+        const float &rotation
+) : GameObject(position, size, rotation),
+    m_pSprite(pSprite),
+    m_velocity(velocity),
+    m_moveOffset(glm::vec2(0.f, 1.f)),
+    m_eOrientation(EOrientation::Top),
+    m_move(false) {
 }
 
 void Tank::render() const {
-    m_pSprite->render();
+    m_pSprite->render(m_position, m_size, m_rotation);
 }
 
 void Tank::update(const uint64_t delta) {
@@ -26,7 +26,6 @@ void Tank::update(const uint64_t delta) {
     }
 
     m_position += static_cast<float>(delta) * m_velocity * m_moveOffset;
-    m_pSprite->setPosition(m_position);
     m_pSprite->update(delta);
 }
 

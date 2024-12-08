@@ -32,12 +32,18 @@ add_executable(${PROJECT_NAME}
 
         src/Game/Game.cpp
         src/Game/Game.h
-        src/Game/Tank.cpp
-        src/Game/Tank.h
+        src/Game/GameObjects/Tank.cpp
+        src/Game/GameObjects/Tank.h
         src/Renderer/VertexBufferLayout.cpp
         src/Renderer/VertexBufferLayout.h
         src/Renderer/Renderer.cpp
         src/Renderer/Renderer.h
+        src/Core/GameObject.cpp
+        src/Core/GameObject.h
+        src/Game/Level.cpp
+        src/Game/Level.h
+        src/Game/GameObjects/BrickWall.cpp
+        src/Game/GameObjects/BrickWall.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)

@@ -7,6 +7,8 @@
 
 class Tank;
 
+class Level;
+
 class Game {
 public:
     Game(const glm::ivec2 &windowSize);
@@ -33,4 +35,5 @@ private:
     EGameState m_eCurrentGameState;
 
     std::unique_ptr<Tank> m_pTank;
+    std::unique_ptr<Level> m_pLevel;
 };

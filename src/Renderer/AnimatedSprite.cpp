@@ -6,17 +6,11 @@
 RenderEngine::AnimatedSprite::AnimatedSprite(
         const std::shared_ptr<Texture2D> &pTexture,
         const std::string &initialSubTextureName,
-        const std::shared_ptr<ShaderProgram> &pShaderProgram,
-        const glm::vec2 &position,
-        const glm::vec2 &size,
-        const float &rotation
+        const std::shared_ptr<ShaderProgram> &pShaderProgram
 ) : Sprite(
         pTexture,
         initialSubTextureName,
-        pShaderProgram,
-        position,
-        size,
-        rotation
+        pShaderProgram
 ) {
     m_pCurrentAnimationDurations = m_statesMap.end();
 }
@@ -28,7 +22,8 @@ void RenderEngine::AnimatedSprite::insertState(
     m_statesMap.emplace(std::move(state), std::move(subTexturesDuration));
 }
 
-void RenderEngine::AnimatedSprite::render() const {
+void
+RenderEngine::AnimatedSprite::render(const glm::vec2 &position, const glm::vec2 &size, const float &rotation) const {
     if (m_hasChanges) {
         auto subTexture = m_pTexture->getSubTexture(
                 m_pCurrentAnimationDurations->second[m_currentFrame].first
@@ -46,7 +41,7 @@ void RenderEngine::AnimatedSprite::render() const {
         m_hasChanges = false;
     }
 
-    Sprite::render();
+    Sprite::render(position, size, rotation);
 }
 
 void RenderEngine::AnimatedSprite::update(uint64_t delta) {
@@ -65,7 +60,7 @@ void RenderEngine::AnimatedSprite::update(uint64_t delta) {
     }
 }
 
-void RenderEngine::AnimatedSprite::setState(std::string newState) {
+void RenderEngine::AnimatedSprite::setState(const std::string &newState) {
     auto it = m_statesMap.find(newState);
     if (it == m_statesMap.end()) {
         std::cout << "Can't find animation state: " << newState << std::endl;
