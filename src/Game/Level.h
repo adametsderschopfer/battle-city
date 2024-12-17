@@ -8,7 +8,7 @@ class GameObject;
 
 class Level {
 public:
-    Level(const std::vector<std::string> &levelDescription);
+    explicit Level(const std::vector<std::string> &levelDescription);
 
     virtual void render() const;
 

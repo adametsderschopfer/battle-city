@@ -73,18 +73,6 @@ bool Game::init() {
         return false;
     }
 
-    auto pTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
-    if (!pTextureAtlas) {
-        std::cerr << "Can't find texture atlas mapTextureAtlas" << std::endl;
-        return false;
-    }
-
-    auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
-    if (!pTextureAtlas) {
-        std::cerr << "Can't find texture atlas TanksTextureAtlas" << std::endl;
-        return false;
-    }
-
     glm::mat4 projectionMatrix = glm::ortho(
             0.f,
             static_cast<float>(m_windowSize.x),
@@ -99,11 +87,6 @@ bool Game::init() {
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     m_pTank = std::make_unique<Tank>(
-            ResourceManager::getSprite("tankSprite_top"),
-            ResourceManager::getSprite("tankSprite_bottom"),
-            ResourceManager::getSprite("tankSprite_left"),
-            ResourceManager::getSprite("tankSprite_right"),
-
             0.00000005f,
             glm::vec2(0.f),
             glm::vec2(16.f, 16.f),

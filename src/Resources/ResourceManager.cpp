@@ -145,7 +145,7 @@ ResourceManager::loadSprite(
 ) {
     auto pTexture = getTexture(textureName);
     if (!pTexture) {
-        std::cerr << "Can't find the texture by " << textureName << "for the sprite" << std::endl;
+        std::cerr << "Can't find the texture by " << textureName << " for the sprite" << std::endl;
         return nullptr;
     }
 
