@@ -44,6 +44,8 @@ add_executable(${PROJECT_NAME}
         src/Game/GameObjects/BrickWall.h
         src/Renderer/SpriteAnimator.cpp
         src/Renderer/SpriteAnimator.h
+        src/Game/GameObjects/ConcreteWall.cpp
+        src/Game/GameObjects/ConcreteWall.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)

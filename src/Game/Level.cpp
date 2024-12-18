@@ -3,6 +3,7 @@
 #include "./GameObjects/BrickWall.h"
 #include "iostream"
 #include "memory"
+#include "GameObjects/ConcreteWall.h"
 
 u_int BLOCK_SIZE = 16;
 
@@ -31,6 +32,19 @@ std::shared_ptr<GameObject> createGameObjectFromDescription(
             return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopLeft, position, size);
         case 'J':
             return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size);
+
+
+        case '5':
+            return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::Right, position, size);
+        case '6':
+            return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::Bottom, position, size);
+        case '7':
+            return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::Left, position, size);
+        case '8':
+            return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::Top, position, size);
+        case '9':
+            return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::All, position, size);
+
         case 'D':
             return nullptr;
         default:

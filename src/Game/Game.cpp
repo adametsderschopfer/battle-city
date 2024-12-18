@@ -21,12 +21,12 @@ Game::Game(const glm::ivec2 &windowSize)
 Game::~Game() = default;
 
 void Game::render() const {
-    if (m_pLevel) {
-        m_pLevel->render();
-    }
-
     if (m_pTank) {
         m_pTank->render();
+    }
+    
+    if (m_pLevel) {
+        m_pLevel->render();
     }
 }
 

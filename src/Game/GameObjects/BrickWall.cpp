@@ -74,23 +74,23 @@ BrickWall::BrickWall(
         default:
             break;
     }
-}
 
-void BrickWall::renderBrick(const EBrickLocation &eBrickLocation) const {
-    static const std::array<glm::vec2, 4> offsets = {
+    m_blockOffsets = {
             glm::vec2(0, m_size.y / 2.f),
             glm::vec2(m_size.x / 2.f, m_size.y / 2.f),
             glm::vec2(0, 0),
             glm::vec2(m_size.x / 2.f, 0),
     };
+}
 
+void BrickWall::renderBrick(const EBrickLocation &eBrickLocation) const {
     const EBrickState state = m_eCurrentBrickState[static_cast<size_t>(eBrickLocation)];
     if (state == EBrickState::Destroyed) {
         return;
     }
 
     m_sprites[static_cast<size_t>(state)]->render(
-            m_position + offsets[static_cast<size_t>(eBrickLocation)],
+            m_position + m_blockOffsets[static_cast<size_t>(eBrickLocation)],
             m_size / 2.f,
             m_rotation
     );
