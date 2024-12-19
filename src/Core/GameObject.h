@@ -8,7 +8,7 @@ public:
 
     virtual void render() const = 0;
 
-    virtual void update(uint64_t delta) = 0;
+    virtual void update(uint64_t delta) {};
 
     virtual ~GameObject();
 

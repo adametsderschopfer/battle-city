@@ -4,6 +4,10 @@
 #include "iostream"
 #include "memory"
 #include "GameObjects/ConcreteWall.h"
+#include "GameObjects/Trees.h"
+#include "GameObjects/Ice.h"
+#include "GameObjects/Water.h"
+#include "GameObjects/Eagle.h"
 
 u_int BLOCK_SIZE = 16;
 
@@ -44,6 +48,17 @@ std::shared_ptr<GameObject> createGameObjectFromDescription(
             return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::Top, position, size);
         case '9':
             return std::make_shared<ConcreteWall>(ConcreteWall::EConcreteWallType::All, position, size);
+
+        case 'B':
+            return std::make_shared<Trees>(position, size);
+        case 'C':
+            return std::make_shared<Ice>(position, size);
+        case 'A':
+            return std::make_shared<Water>(position, size);
+
+
+        case 'E':
+            return std::make_shared<Eagle>(position, size);
 
         case 'D':
             return nullptr;

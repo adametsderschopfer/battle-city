@@ -46,6 +46,14 @@ add_executable(${PROJECT_NAME}
         src/Renderer/SpriteAnimator.h
         src/Game/GameObjects/ConcreteWall.cpp
         src/Game/GameObjects/ConcreteWall.h
+        src/Game/GameObjects/Trees.cpp
+        src/Game/GameObjects/Trees.h
+        src/Game/GameObjects/Ice.cpp
+        src/Game/GameObjects/Ice.h
+        src/Game/GameObjects/Water.cpp
+        src/Game/GameObjects/Water.h
+        src/Game/GameObjects/Eagle.cpp
+        src/Game/GameObjects/Eagle.h
 )
 
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)

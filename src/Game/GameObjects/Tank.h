@@ -12,7 +12,7 @@ namespace RenderEngine {
 
 class Tank : public GameObject {
 public:
-    enum class EOrientation {
+    enum class EOrientation : uint8_t {
         Top,
         Bottom,
         Left,

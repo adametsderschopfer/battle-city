@@ -4,30 +4,14 @@
 #include "memory"
 
 #include "../../Core/GameObject.h"
+#include "../../Renderer/SpriteAnimator.h"
 
 namespace RenderEngine {
     class Sprite;
 }
 
-class ConcreteWall : public GameObject {
+class Water : public GameObject {
 public:
-    enum class EConcreteWallType : uint8_t {
-        All,
-        Top,
-        Bottom,
-        Left,
-        Right,
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight
-    };
-
-    enum class EBlockState : uint8_t {
-        Enabled = 0,
-        Destroyed
-    };
-
     enum class EBlockLocation : uint8_t {
         TopLeft,
         TopRight,
@@ -35,8 +19,7 @@ public:
         BottomRight,
     };
 
-    ConcreteWall(
-            const EConcreteWallType &eConcreteWallType,
+    Water(
             const glm::vec2 &position,
             const glm::vec2 &size,
             const float &rotation = 0.f
@@ -47,8 +30,8 @@ public:
     void update(uint64_t delta) override;
 
 private:
-    std::array<EBlockState, 4> m_eCurrentBlockState;
     std::shared_ptr<RenderEngine::Sprite> m_sprite;
+    RenderEngine::SpriteAnimator m_spriteAnimator;
     std::array<glm::vec2, 4> m_blockOffsets;
 
     void renderBlock(const EBlockLocation &eBlockLocation) const;

@@ -24,7 +24,7 @@ void Game::render() const {
     if (m_pTank) {
         m_pTank->render();
     }
-    
+
     if (m_pLevel) {
         m_pLevel->render();
     }
@@ -94,7 +94,7 @@ bool Game::init() {
     );
 
     m_pLevel = std::make_unique<Level>(
-            ResourceManager::getLevels()[0]
+            ResourceManager::getLevels()[1]
     );
 
     return true;
